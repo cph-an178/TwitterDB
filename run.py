@@ -1,3 +1,4 @@
+import re
 import csv
 import argparse
 from bson import SON
@@ -78,7 +79,7 @@ def twitter_users(db):
 def most_links(db):
     print("2. Which Twitter users link the most to other Twitter users? (Provide the top ten.)")
     pipeline = [
-        {"$match": {"text": {"$regex": "@"}}},
+        {"$match": {"text": {"$regex": "@\\w*"}}},
         {"$group": {"_id": "$user", "count": {"$sum": 1}}},
         {"$sort": SON([("count", -1), ("user", -1)])},
         {"$limit": 10}
@@ -89,24 +90,33 @@ def most_links(db):
 
 def most_mentions(db):
     print("3. Who is are the most mentioned Twitter users? (Provide the top five.)")
-    print("DOES NOT WORK")
-    
     pipeline = [
-        {"$match": {"text": {"$regex": "@$user"}}},
-        {"$group": {"_id": "$user", "count": {"$sum": 1}}},
+        {"$match": {"text": {"$regex": "@\\w*"}}},
+        {"$group": {
+            "_id": {"$substrCP": ["$text", {"$indexOfCP": ["$text", "@"]}, {"$indexOfCP": ["$text", " "]}]},
+            "count": {"$sum": 1}}},
         {"$sort": SON([("count", -1), ("user", -1)])},
         {"$limit": 5}
     ]
     result = db.tweets.aggregate(pipeline)
     pp_all(result)
+    
+
 
     """
     # Brute force
-    users = db.tweets.distinct("user")
+    rs = {}
+    match = r"@(\\w*)"
+    print(db.tweets.find_one({"text": {"$regex": "@"}}))
+    for u in db.tweets.find({"text": {"$regex": "@"}}):
+        m = re.match(match, u["text"])
+        user = m.group(1)
+        if user in rs.keys():
+            rs[user] += 1
+        else:
+            rs[user] = 0
     
-    for user in users:
-        print(db.tweets.find({"text": {"$regex": "@" + user}}).count())
-
+    print(rs)
     # Estimate run time is 180+ hours    
     """
     
