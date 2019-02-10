@@ -32,7 +32,7 @@ def main():
 
     if args.run:
         client = MongoClient()
-        db = client['test'] # change before push to github
+        db = client['Tweets'] # change before push to github
         q = args.question
         if q == 1:
             twitter_users(db)
@@ -101,8 +101,6 @@ def most_mentions(db):
     result = db.tweets.aggregate(pipeline)
     pp_all(result)
     
-
-
     """
     # Brute force
     rs = {}
@@ -121,8 +119,6 @@ def most_mentions(db):
     """
     
     
-
-
 def most_active(db):
     print("4. Who are the most active Twitter users (top ten)?")
     pipeline = [
