@@ -1,2 +1,7 @@
 # Ignoreing the csv files
 *.csv
+# Ignoring test files
+test*
+
+# Ignoring pycache
+__pycache__/
