@@ -134,14 +134,14 @@ result_happy = db.tweets.aggregate(pipeline)
 ### Arguments
 
 - **Arrays of Ancestors**:
-  - Atomicirty: You only write to one document
-  - Indexes: It is posible to index 
-  - Large Number of Collections: Each document must refer to it's ancestors, so you can get a large collection 
+  - Atomicirty: Each tree node is stored in one document
+  - Indexes: It is posible to create indexes 
+  - Large Number of Collections: Each document must refer to it's ancestors, therefor you'll get an large collection
 - **Materialized paths**:
-  - Sharding: TODO
-  - Large Number of Collections: TODO
-  - Collection Contains Large Number of Small Documents: TODO
+  - Sharding: Because you can get a partial path of the document
+  - Large Number of Collections: Each path is stored in each document created
+  - Collection Contains Large Number of Small Documents: ?
 - **Nested sets**:
-  - Atomicity: TODO
-  - Sharding: TODO
-  - Indexes: TODO
+  - Atomicity: The tree nodes are stored in one document
+  - Sharding: You can shard diffrent nested sets
+  - Indexes: Each tree node can be indexed
